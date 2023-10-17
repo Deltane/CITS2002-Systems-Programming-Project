@@ -1,0 +1,73 @@
+Let's go through each function and discuss where and why you would use them in the `mysync` program:
+
+1. **`perror`**:
+   - Usage: Error handling to print descriptive error messages based on the error code.
+   - Why: To provide meaningful error messages when encountering errors during file operations or system calls.
+
+2. **`getopt`**:
+   - Usage: Parsing command-line arguments and options.
+   - Why: To handle command-line options (-a, -i, -n, -o, -p, -r, -v) and their respective arguments.
+
+3. **`malloc`** and **`realloc`**:
+   - Usage: Dynamic memory allocation for creating buffers or data structures.
+   - Why: To allocate memory for storing file paths, buffers for file contents, and other dynamic data structures.
+
+4. **`strdup`**:
+   - Usage: Creating a duplicate of a string.
+   - Why: To duplicate strings when needed, especially for storing filenames or paths in memory.
+
+5. **`free`**:
+   - Usage: Freeing dynamically allocated memory.
+   - Why: To release memory allocated using `malloc`, `realloc`, or `strdup` to prevent memory leaks.
+
+6. **`opendir`, `readdir`, `closedir`**:
+   - Usage: Directory handling, opening, reading, and closing directories.
+   - Why: To traverse directories and list files for synchronization.
+
+7. **`stat`**:
+   - Usage: Retrieving file status and information (e.g., modification time, permissions).
+   - Why: To obtain information about files for synchronization and handling permissions.
+
+8. **`mkdir`**:
+   - Usage: Creating directories.
+   - Why: To create directories if they do not exist during synchronization.
+
+9. **`open`, `read`, `write`, `close`**:
+   - Usage: File handling for reading from and writing to files.
+   - Why: To read and write file contents during synchronization.
+
+10. **`chmod`**:
+    - Usage: Changing file permissions.
+    - Why: To set the desired permissions for files during synchronization.
+
+11. **`utime`**:
+    - Usage: Updating file access and modification times.
+    - Why: To set the modified time of a copied file to match the original file during synchronization.
+
+12. **`glob2regex`**:
+    - Usage: Converting a glob pattern to a regular expression.
+    - Why: To transform user-provided glob patterns (e.g., -i and -o options) into regular expressions for file matching.
+
+13. **`regcomp`** and **`regexec`**:
+    - Usage: Compiling and executing regular expressions.
+    - Why: To match filenames against regular expressions, particularly for the -i and -o options.
+
+These functions are essential for file handling, error reporting, memory management, directory operations, and regular expression matching, all of which are needed to implement the `mysync` utility according to the specified requirements.
+
+sample solutions needed:
+
+So, when testing your projects, we'll ensure that no 2 files have the same modification time (avoiding the potential problem).
+
+You first identify what should be copied and then (if no -n option) you do the copying.
+
+No, we don't lokk at file's contents (how can you tell which is the more recent content?).
+
+I can see that the outcomes should be the same - you make the file copies, and then extend a dynamic data-structure to remember what has been performed.  
+
+In contrast, the sample solution builds its dynamic data-structure to define what it will copy,  and then performs all the activities recorded in it structure.
+
+ 
+> And yes it did lead to an infinite sequence of directories, but only when syncing a directory with it's child. We can't (yet) see what the sample solution does in such a situation right? Because it treats each individual zipped file as it's own top level dir.
+
+
+The sample solution successfully recursively syncs directories and their (embedded) child directories *because* it works out what to copy before it starts copying, and does not continue 'processing' the newly created directories.

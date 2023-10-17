@@ -19,6 +19,7 @@ write the main() function, whose initial task is simply to receive and validate 
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
+        fprintf(stderr, "Error: No directories provided.\n");
         fprintf(stderr, "Usage: %s <directory1> <directory2> [directory3 ...]\n", argv[0]);
         return EXIT_FAILURE;
     }
@@ -34,9 +35,12 @@ int main(int argc, char *argv[]) {
     }
 
     for (int i = 0; i < argc - 1; i++) {
-        printf("Files modified last in %s:\n", argv[i + 1]);
-        for (int j = 0; j < num_files[i]; j++)
-            printf("%s\n", files[i][j].filename);
+        printf("Most recently modified file in %s:\n", argv[i + 1]);
+        if (num_files[i] > 0) {
+            printf("%s\n", files[i][0].filename);  // Print the most recently modified file
+        } else {
+            printf("No files found in this directory.\n");
+        }
         printf("\n");
 
         // Cleanup for each directory
